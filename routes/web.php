@@ -21,3 +21,25 @@ Route::get('/home', function () {
 });
 
 Route::get('/kegiatan', [KegiatanController::class, 'index']);
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::get('user/profile', function () {
+
+})->middleware('auth');
+
+use App\Http\Middleware\CheckUser;
+
+Route::get('user/profile', function () {
+
+})->middleware(CheckUser::class);
+
+Route::get('/beranda', function () {
+    return view('beranda');
+});
+
+Route::get('/kunjungan', function () {
+    return view('kunjungan');
+});

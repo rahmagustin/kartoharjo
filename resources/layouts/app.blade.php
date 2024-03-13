@@ -6,7 +6,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title') Kartoharjo Recycle</title>
-    <!-- Styles, scripts, or other common meta tags -->
+
+    <link rel="stylesheet" href="{{ assets('css/login.css') }}">
+
+    Styles, scripts, or other common meta tags
 </head>
 <body>
     <header>
