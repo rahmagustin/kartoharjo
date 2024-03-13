@@ -22,9 +22,9 @@ class HomeController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
 
-    public function dashboard()
+    public function beranda()
     {
-        return view('dashboard');
+        return view('beranda');
     } 
 
     public function index()

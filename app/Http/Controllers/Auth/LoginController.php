@@ -1,10 +1,13 @@
 <?php
 
 namespace App\Http\Controllers\Auth;
-
+use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
 {
@@ -26,33 +29,39 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = 'beranda';
 
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
-    {
-        $this->middleware('guest')->except('logout');
-    }
-
+   
     public function login(Request $request)
     {
-        $this->validate($request, [
-            'username' => 'required|string',
-            'password'=>'required|string|min:6',
-        ]);
-
-        $loginType = filter_var($request->username, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
-        $login = [
-            $loginType => $request->username,
-            'password' => $request->password
-        ];
-        if (auth()->attempt($login)) {
-            return redirect()->route('home');
-        }
-        return redirect()->route('login')->with(['error' => 'Email/Password Salah!']);
+        return view('auth.login');
     }
+        public function loginku(Request $request)
+        {
+            $credentials = $request->only('email', 'password');
+
+            if (Auth::attempt($request->only(['email_users','password_users']))) {
+                $user = User::where('email_users', $request->input('email_users'))->first();
+                return redirect()->intended(route('beranda'));
+            } else {
+                $user = User::where('email_users', $request->input('email_users'))->first();
+
+                if (!$user) {
+                    throw ValidationException::withMessages([
+                        'email_users' => trans('Email Salah')
+                    ]);
+                } else {
+                    if (!Hash::check($request->input('password_users'), $user->password)) {
+                        throw ValidationException::withMessages([
+                            'password_users' => trans('Kata Sandi Salah')
+                        ]);
+                    }
+                }
+            }
+        }
 }
